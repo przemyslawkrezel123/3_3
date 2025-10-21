@@ -2,3 +2,27 @@ html {
   height: 100%;
   width: 100%;
 }
+body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+}
+.post {
+  border: 1px solid #ff00ff;
+  padding: 10px;
+  margin: 10px;
+  width: 50%;
+}
+.post h3 {
+  color: #80ffff;
+}
+.post h2 {
+  color: #ff0080;
+}
+.post h1 {
+  color: #0080ff;
+}
