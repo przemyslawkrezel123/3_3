@@ -9,7 +9,7 @@
       errorBox.style.display = "none";
     
       try {
-        const res = await fetch("/stations");
+        const res = await fetch("/datasets");
 
         if (!res.ok) {
           const t = await res.text();
@@ -18,18 +18,20 @@
         const data = await res.json();
 
         tableBody.innerHTML = "";
-        data.results.forEach(station => {
-          const id = station.id || "-";
-          const name = station.name || "-";
-          const latitude = station.latitude || "-";
-          const longitude = station.longitude || "-";
+        data.results.forEach(dataset => {
+          const id = dataset.id || "-";
+          const name = dataset.name || "-";
+          const datacoverage = dataset.datacoverage || "-";
+          const mindate = dataset.mindate || "-";
+          const maxdate = dataset.maxdate || "-";
 
           const row = `
             <tr>
               <td>${id}</td>
               <td>${name}</td>
-              <td>${latitude}</td>
-              <td>${longitude}</td>
+              <td>${datacoverage}</td>
+              <td>${mindate}</td>
+              <td>${maxdate}</td>
             </tr>`;
           tableBody.innerHTML += row;
         });

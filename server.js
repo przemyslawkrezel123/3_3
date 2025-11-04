@@ -17,6 +17,7 @@ const API_BASE = "https://www.ncei.noaa.gov/cdo-web/api/v2";
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
+
 async function proxyFetch(endpoint) {
   const response = await fetch(`${API_BASE}${endpoint}`, {
     headers: { token: API_TOKEN },
@@ -30,6 +31,7 @@ async function proxyFetch(endpoint) {
   return await response.json();
 }
 
+
 app.get("/stations", async (req, res) => {
   try {
     const data = await proxyFetch("/stations");
@@ -39,6 +41,18 @@ app.get("/stations", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.get("/datasets", async (req, res) => {
+  try {
+    const data = await proxyFetch("/datasets");
+    res.json(data);
+  } catch (err) {
+    console.error("Błąd proxy /datasets:", err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Proxy działa na http://localhost:${PORT}`);
