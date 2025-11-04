@@ -8,9 +8,10 @@
   </head>
   <body>
     <h1>Generator GIF z GIPHY</h1>
-    <label>tag: <input id="tag" placeholder="np. cat, dog, fun"></label>
+    <label>fraza: <input id="q" placeholder="np. cat"></label>
+    <label>limit: <input id="limit" type="number" value="5" min="1" max="25"></label>
     <button id="searchBtn">Pobierz GIF</button>
-    <div id="gifContainer" style="margin-top:20px;"></div>
+    <div id="gifContainer" style="margin-top:20px; display:flex; flex-wrap:wrap; gap:10px;"></div>
     <script src="script.js"></script>
   </body>
 </html>

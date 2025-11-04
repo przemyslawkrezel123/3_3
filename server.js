@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 // Twój token NOAA
 const API_TOKEN = "pZ6q49H4GSbxiLYEaibvB58XMvm3I2vc";
-const API_BASE = "https://api.giphy.com/v1/gifs/random";
+const API_BASE = "https://api.giphy.com/v1/gifs/search";
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
@@ -21,12 +21,11 @@ app.use(express.static(path.join(__dirname, "public")));
 async function proxyFetch(params = {}) {
   const url = new URL(API_BASE);
   url.searchParams.append("api_key", API_TOKEN);
+  url.searchParams.append("q", params.q || "funny");
+  url.searchParams.append("limit", params.limit || "5");
   url.searchParams.append("rating", params.rating || "g");
-  if (params.tag) url.searchParams.append("tag", params.tag);
 
   const response = await fetch(url);
-
-
 
   if (!response.ok) {
     const text = await response.text();
@@ -36,19 +35,15 @@ async function proxyFetch(params = {}) {
   return await response.json();
 }
 
-
-app.get("/gif", async (req, res) => {
+app.get("/search", async (req, res) => {
   try {
     const data = await proxyFetch(req.query);
     res.json(data);
   } catch (err) {
-    console.error("Błąd proxy /gif:", err.message);
+    console.error("Błąd proxy /search:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
-
-
-
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Proxy działa na http://localhost:${PORT}`);
