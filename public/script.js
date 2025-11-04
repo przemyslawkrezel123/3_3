@@ -6,41 +6,25 @@ const status = document.getElementById("status");
 button.addEventListener("click", downloadData);
 
 async function downloadData() {
-  errorBox.style.display = "none";
-  tableBody.innerHTML = "";
-
-  const datasetid = document.getElementById("datasetid").value;
-  const locationid = document.getElementById("locationid").value;
-  const startdate = document.getElementById("startdate").value;
-  const enddate = document.getElementById("enddate").value;
-  const limit = document.getElementById("limit").value;
-
-  const query = new URLSearchParams({ datasetid, locationid, startdate, enddate, limit }).toString();
+  const tag = document.getElementById("tag").value;
+  const gifContainer = document.getElementById("gifContainer");
+  gifContainer.innerHTML = "";
 
   try {
-    const res = await fetch(`/data?${query}`);
+    const res = await fetch(`/gif?tag=${encodeURIComponent(tag)}`);
     if (!res.ok) throw new Error(`Błąd serwera: ${res.status}`);
-
     const data = await res.json();
 
-    if (!data.results) {
-      tableBody.innerHTML = `<tr><td colspan="5">Brak danych</td></tr>`;
+    const gifUrl = data.data?.images?.downsized_medium?.url;
+    if (!gifUrl) {
+      gifContainer.textContent = "Nie znaleziono GIFa 😕";
       return;
     }
 
-    data.results.forEach(d => {
-      const row = `
-        <tr>
-          <td>${d.datatype || "-"}</td>
-          <td>${d.station || "-"}</td>
-          <td>${d.date || "-"}</td>
-          <td>${d.value ?? "-"}</td>
-          <td>${d.attributes || "-"}</td>
-        </tr>`;
-      tableBody.innerHTML += row;
-    });
+    gifContainer.innerHTML = `<img src="${gifUrl}" alt="Losowy GIF" style="max-width:100%;border-radius:8px;">`;
   } catch (err) {
-    tableBody.innerHTML = `<tr><td colspan="5">Błąd: ${err.message}</td></tr>`;
+    gifContainer.textContent = `Błąd: ${err.message}`;
   }
 }
+
 

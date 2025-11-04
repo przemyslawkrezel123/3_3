@@ -11,17 +11,21 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Twój token NOAA
-const API_TOKEN = "wBtiiKzDVwzqmJPIRlrMnJIBQGjTMsZA";
-const API_BASE = "https://www.ncei.noaa.gov/cdo-web/api/v2/data";
+const API_TOKEN = "pZ6q49H4GSbxiLYEaibvB58XMvm3I2vc";
+const API_BASE = "https://api.giphy.com/v1/gifs/random";
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
 
-async function proxyFetch(query = "") {
-  const response = await fetch(`${API_BASE}${query}`, {
-    headers: { token: API_TOKEN },
-  });
+async function proxyFetch(params = {}) {
+  const url = new URL(API_BASE);
+  url.searchParams.append("api_key", API_TOKEN);
+  url.searchParams.append("rating", params.rating || "g");
+  if (params.tag) url.searchParams.append("tag", params.tag);
+
+  const response = await fetch(url);
+
 
 
   if (!response.ok) {
@@ -33,36 +37,16 @@ async function proxyFetch(query = "") {
 }
 
 
-app.get("/stations", async (req, res) => {
+app.get("/gif", async (req, res) => {
   try {
-    const data = await proxyFetch("/stations");
+    const data = await proxyFetch(req.query);
     res.json(data);
   } catch (err) {
-    console.error("Błąd proxy /stations:", err.message);
+    console.error("Błąd proxy /gif:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
-app.get("/datasets", async (req, res) => {
-  try {
-    const data = await proxyFetch("/datasets");
-    res.json(data);
-  } catch (err) {
-    console.error("Błąd proxy /datasets:", err.message);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/data", async (req, res) => {
-  try {
-    const query = new URLSearchParams(req.query).toString();
-    const data = await proxyFetch(`?${query}`);
-    res.json(data);
-  } catch (err) {
-    console.error("Błąd proxy /data:", err.message);
-    res.status(500).json({ error: err.message });
-  }
-});
 
 
 
