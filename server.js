@@ -24,10 +24,11 @@ async function proxyFetch(params = {}) {
   url.searchParams.append("q", params.q || "funny");
   url.searchParams.append("limit", params.limit || "5");
   url.searchParams.append("rating", params.rating || "g");
+  url.searchParams.append("offset", params.offset || "0");
 
   const response = await fetch(url);
-
-  if (!response.ok) {
+  
+  if (!response.ok) {  
     const text = await response.text();
     throw new Error(`NOAA ${response.status}: ${text}`);
   }
