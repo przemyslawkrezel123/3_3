@@ -1,6 +1,6 @@
 entrypoint="index.html"
 hidden=[".config"]
-modules = ["web", "python-3.11"]
+modules = ["nodejs-20", "python-3.11", "web"]
 
 [nix]
 channel = "stable-25_05"
@@ -32,6 +32,10 @@ waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
+
+[[ports]]
+localPort = 3000
+externalPort = 3001
 
 [[ports]]
 localPort = 5000
